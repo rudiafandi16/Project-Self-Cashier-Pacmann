@@ -13,12 +13,17 @@ tabel pada method check_order
 """
 import pandas as pd
 
+"""
+dibuat sebuah class Transaction untuk menjalankan program kasir
+mandiri.
+"""
 class Transaction:
+  """Fungsi untuk menginisiasi data
+  belanjaan ke dalam bentuk data Dictionary
+  """
   def __init__(self):
     self.data_belanjaan = dict()
 
-
-  
     """
     Fungsi untuk menambahkan data belanjaan
 
@@ -28,32 +33,71 @@ class Transaction:
     harga  : int   harga per items
     """
   def add_item(self, nama, jumlah, harga):
-    self.data_belanjaan.update({nama: [jumlah, harga, jumlah * harga]})
+    try:
+      self.data_belanjaan.update({nama: [jumlah, harga, jumlah * harga]})
+    except ValueError:
+      print("Input tidak benar!")
+
+    """
+    Fungsi untuk mengganti nama item, apabila
+    sebelumnya ada kesalahan dalam memasukkan nama item
+
+    paramaters:
+    nama      : str nama items yang ingin diganti
+    nama_baru : str nama items baru yang sesuai
+    """
 
   def update_item_name(self, nama, nama_baru):
-    temp = self.data_belanjaan[nama] # membuat variabel sederhana
-    self.data_belanjaan.pop(nama)
-    self.data_belanjaan.update({nama_baru: temp})
-  
+    try:
+      temp = self.data_belanjaan[nama] # membuat variabel sederhana
+      self.data_belanjaan.pop(nama)
+      self.data_belanjaan.update({nama_baru: temp})
+    except KeyError:
+      print("Nama item yang dimasukkan tidak sesuai!")
+    """
+    Fungsi untuk mengubah jumlah dari suatu item belanjaan
+
+    parameters:
+    nama        : str nama items yang ingin diupdate jumlahnya
+    jumlah_baru : int masukkan jumlah yang diinginkan
+    """
   def update_item_qty(self, nama, jumlah_baru):
     self.data_belanjaan[nama][0] = jumlah_baru
     self.data_belanjaan[nama][2] = jumlah_baru * self.data_belanjaan[nama][1]
+  
+    """
+    Fungsi untuk mengubah harga dari suatu item belanjaan
 
+    parameters:
+    nama        : str nama items yang ingin diupdate harganya
+    harga_baru : int masukkan nominal harga yang diinginkan
+    """
   def update_item_price(self, nama, harga_baru):
     self.data_belanjaan[nama][1] = harga_baru
     self.data_belanjaan[nama][2] = harga_baru * self.data_belanjaan[nama][0]
 
-  
+   """
+  Fungsi untuk menghapus salah satu item belanjaan
+
+  parameters:
+  nama    : str nama items yang ingin dihapus dari daftar belanjaan
+  """
   def delete_item(self,nama):
     self.nama = nama
     if nama == nama:
       self.data_belanjaan.pop(nama)
   
+  """
+  Fungsi untuk menghapus seluruh data belanjaan
+  """
   def reset_transaction(self):
     self.data_belanjaan.clear()
     print("Semua item berhasil di delete!")
   
-
+  """
+  Fungsi untuk mengecek daftar barang belanjaan yang sudah 
+  diinput, memastikan bahwa semuanya sudah sesuai
+  """
   def check_order(self):
     if(len(self.data_belanjaan) == 0):
         print("Terdapat Kesalahan Input Data!")
@@ -63,7 +107,14 @@ class Transaction:
         data["Total Harga"] = data["Jumlah item"] * data["Harga per item"]
         print(data.to_markdown())
 
-  
+  """
+  Fungsi untuk menghitung harga total dari belanjaan yang sudah diinput
+
+  Ada potongan diskon dengan ketentuan:
+  * total barang belanjaan lebih dari RP 200,000 mendapatkan diskon 5% 
+  * total barang belanjaan lebih dari RP 300,000 mendapatkan diskon 8%
+  * total barang belanjaan lebih dari RP 500,000 mendapatkan diskon 10%
+  """
   def total_price(self):
     total = 0
     for i in self.data_belanjaan.values():
