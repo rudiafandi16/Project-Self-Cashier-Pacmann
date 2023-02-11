@@ -76,7 +76,7 @@ class Transaction:
     self.data_belanjaan[nama][1] = harga_baru
     self.data_belanjaan[nama][2] = harga_baru * self.data_belanjaan[nama][0]
 
-   """
+  """
   Fungsi untuk menghapus salah satu item belanjaan
 
   parameters:
